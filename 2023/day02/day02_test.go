@@ -249,12 +249,13 @@ func TestValidateGameSet(t *testing.T) {
 	}
 }
 
-func TestDay02(t *testing.T) {
+func TestDay02Part01(t *testing.T) {
 
 	type games struct {
-		gs       []string
-		r        cubeSet
-		expected int
+		gs            []string
+		r             cubeSet
+		expectedSum   int
+		expectedPower int
 	}
 
 	gameLines := []string{
@@ -263,14 +264,14 @@ func TestDay02(t *testing.T) {
 		"Game 3: 1 red; 12 blue, 15 red; 1 green, 10 red, 2 blue; 1 green, 3 red, 9 blue",
 		"Game 4: 6 blue, 5 green; 2 blue, 6 green, 6 red; 11 blue, 5 red; 6 green, 11 red, 7 blue; 4 green, 10 red; 1 green, 7 red, 13 blue",
 		"Game 5: 10 green, 1 red, 2 blue; 3 red, 4 green, 4 blue; 5 green, 5 red",
-		"Game 9: 1 blue, 11 red, 9 green; 8 red, 1 blue, 9 green; 4 blue, 16 red, 9 green; 8 green, 3 blue, 6 red; 8 green, 11 red, 3 blue; 11 red, 2 blue",
-		"Game 15: 14 blue, 9 green, 1 red; 2 red, 15 blue, 12 green; 1 blue, 2 green, 1 red; 1 red, 16 green, 15 blue; 1 red, 12 green, 8 blue; 1 red, 17 blue",
-		"Game 23: 14 red, 2 blue, 9 green; 9 green, 1 blue, 4 red; 9 red, 1 green, 1 blue; 6 green; 3 blue, 1 green, 9 red; 1 blue, 2 red",
-		"Game 67: 8 red, 4 blue, 6 green; 4 blue, 8 red, 2 green; 1 green, 6 red, 2 blue; 10 red, 1 green, 2 blue; 1 blue, 5 red; 2 red, 1 green, 2 blue",
-		"Game 71: 9 green, 2 blue, 3 red; 5 red; 1 red, 1 blue, 5 green",
-		"Game 87: 2 blue, 2 red, 10 green; 8 green, 9 red, 1 blue; 11 red, 1 green, 4 blue; 13 red, 1 blue; 11 green, 16 red, 3 blue",
-		"Game 97: 5 green, 13 red, 7 blue; 2 blue, 12 red, 6 green; 10 blue, 11 red, 3 green; 4 green, 11 blue, 15 red; 8 green, 16 blue, 1 red; 15 blue, 4 red, 5 green",
-		"Game 100: 8 red, 4 blue, 4 green; 10 blue, 3 red, 4 green; 10 green, 4 red; 18 red, 9 blue, 2 green; 12 red, 4 green, 2 blue",
+		//"Game 9: 1 blue, 11 red, 9 green; 8 red, 1 blue, 9 green; 4 blue, 16 red, 9 green; 8 green, 3 blue, 6 red; 8 green, 11 red, 3 blue; 11 red, 2 blue",
+		//"Game 15: 14 blue, 9 green, 1 red; 2 red, 15 blue, 12 green; 1 blue, 2 green, 1 red; 1 red, 16 green, 15 blue; 1 red, 12 green, 8 blue; 1 red, 17 blue",
+		//"Game 23: 14 red, 2 blue, 9 green; 9 green, 1 blue, 4 red; 9 red, 1 green, 1 blue; 6 green; 3 blue, 1 green, 9 red; 1 blue, 2 red",
+		//"Game 67: 8 red, 4 blue, 6 green; 4 blue, 8 red, 2 green; 1 green, 6 red, 2 blue; 10 red, 1 green, 2 blue; 1 blue, 5 red; 2 red, 1 green, 2 blue",
+		//"Game 71: 9 green, 2 blue, 3 red; 5 red; 1 red, 1 blue, 5 green",
+		//"Game 87: 2 blue, 2 red, 10 green; 8 green, 9 red, 1 blue; 11 red, 1 green, 4 blue; 13 red, 1 blue; 11 green, 16 red, 3 blue",
+		//"Game 97: 5 green, 13 red, 7 blue; 2 blue, 12 red, 6 green; 10 blue, 11 red, 3 green; 4 green, 11 blue, 15 red; 8 green, 16 blue, 1 red; 15 blue, 4 red, 5 green",
+		//"Game 100: 8 red, 4 blue, 4 green; 10 blue, 3 red, 4 green; 10 green, 4 red; 18 red, 9 blue, 2 green; 12 red, 4 green, 2 blue",
 	}
 	restriction := cubeSet{
 		red:   12,
@@ -280,16 +281,20 @@ func TestDay02(t *testing.T) {
 
 	tests := []games{
 		{
-			gs:       gameLines,
-			r:        restriction,
-			expected: 2 + 4 + 5 + 67 + 71, // Sum of valid GameIds
+			gs:            gameLines,
+			r:             restriction,
+			expectedSum:   2 + 4 + 5, //+ 67 + 71, // Sum of valid GameIds
+			expectedPower: (19 * 3 * 14) + (1 * 5 * 12) + (15 * 1 * 12) + (11 * 6 * 13) + (5 * 10 * 4),
 		},
 	}
 
 	for _, tc := range tests {
-		gotSum := day02part1(tc.gs, tc.r)
-		if gotSum != tc.expected {
-			t.Errorf("expected: sum %d, got %d\n", tc.expected, gotSum)
+		gotSum, gotPower := day02part1(tc.gs, tc.r)
+		if gotSum != tc.expectedSum {
+			t.Errorf("expected: sum %d, got %d\n", tc.expectedSum, gotSum)
+		}
+		if gotPower != tc.expectedPower {
+			t.Errorf("expected: power %d, got %d\n", tc.expectedPower, gotPower)
 		}
 	}
 

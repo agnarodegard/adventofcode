@@ -12,6 +12,7 @@ import (
 type game struct {
 	gameID int
 	css    []cubeSet
+	power  int
 }
 
 type cubeSet struct {
@@ -34,25 +35,26 @@ func Day02() {
 		green: 13,
 		blue:  14,
 	}
-
-	fmt.Printf("Day 01: part 1: %d\n", day02part1(lines, restriction))
+	validGamesSum, power := day02part1(lines, restriction)
+	fmt.Printf("Day 01: part 1: %d part 2:%d\n", validGamesSum, power)
 
 }
 
-func day02part1(lines []string, r cubeSet) int {
+func day02part1(lines []string, r cubeSet) (int, int) {
 
 	gameIDsum := 0
+	power := 0
 
 	for _, line := range lines {
 		parsedGame := parseGame(line)
 
 		if validateGame(parsedGame, r) {
-			fmt.Println(parsedGame.gameID)
 			gameIDsum += parsedGame.gameID
 		}
+		power += parsedGame.power
 
 	}
-	return gameIDsum
+	return gameIDsum, power
 }
 
 func parseGame(line string) (g game) {
@@ -67,8 +69,14 @@ func parseGame(line string) (g game) {
 
 	g.gameID = foundIDInt
 	g.css = parseGameSets(game[1])
+	smallestRestriction := findSmallestRestriction(g.css)
+	g.power = sumColors(smallestRestriction)
 
 	return g
+}
+
+func sumColors(cs cubeSet) int {
+	return cs.red * cs.green * cs.blue
 }
 
 func validateGame(g game, restriction cubeSet) bool {
@@ -100,6 +108,22 @@ func parseGameSets(line string) (css []cubeSet) {
 	}
 	return css
 
+}
+
+func findSmallestRestriction(css []cubeSet) (smcs cubeSet) {
+
+	for _, cs := range css {
+		if smcs.red < cs.red {
+			smcs.red = cs.red
+		}
+		if smcs.green < cs.green {
+			smcs.green = cs.green
+		}
+		if smcs.blue < cs.blue {
+			smcs.blue = cs.blue
+		}
+	}
+	return smcs
 }
 
 // parseSet takes a game set and returns a cubeSet struct with the correct number of colored cubes.
