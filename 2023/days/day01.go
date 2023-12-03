@@ -11,7 +11,7 @@ import (
 
 func Day01() {
 
-	content, err := os.ReadFile("days/day01-input.txt")
+	content, err := os.ReadFile("2023/days/day01-input.txt")
 	if err != nil {
 		log.Fatal("os.ReadFile error:", err)
 	}
@@ -21,8 +21,7 @@ func Day01() {
 	//lines = []string{"two1nine", "eightwothree", "abcone2threexyz", "xtwone3four", "4nineeightseven2", "zoneight234", "7pqrstsixteen"}
 	//lines = []string{"6r219sevenpcvfpmfxxl"}
 
-	fmt.Printf("Solution part 1: %d\n", day01part1(lines))
-	fmt.Printf("Solution part 1: %d\n", day01part2(lines))
+	fmt.Printf("Day 01: part 1: %d part2: %d\n", day01part1(lines), day01part2(lines))
 
 }
 
